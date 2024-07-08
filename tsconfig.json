@@ -3,6 +3,7 @@
         "sourceMap": true,
         "outDir": "dist",
         "target": "ES2021",
+        "module": "CommonJS",
         "moduleResolution": "node",
         "strict": true,
         "lib": ["esnext"],
