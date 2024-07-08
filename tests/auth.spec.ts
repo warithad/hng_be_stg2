@@ -2,6 +2,7 @@ import request from "supertest";
 import app from "../src/app";
 import prisma from '../src/prisma'
 
+
 describe('End to End tests', () =>{
     it('should register user successfully with default organisation', async ()=>{
         //should verify the default organisation is correctly generated
@@ -89,3 +90,45 @@ describe('End to End tests', () =>{
     })
 })
 
+describe('Authorization tests', ()=>{
+        var storeId = ''
+        afterAll(async ()=>{
+            await prisma.organisationUser.deleteMany()
+            await prisma.user.deleteMany()
+            await prisma.organisation.deleteMany()
+        })
+    it('should get check if authenticateToken is working', async ()=>{
+        const res = await request(app)
+                    .post('/auth/register')
+                    .send({
+                        firstName: 'John',
+                        lastName: 'Doe',
+                        email: 'john@gmail.com',
+                        password: 'johnjohnjohn',
+                        phone: '123456789'  
+                    })
+                    .set('Accept', 'application/json')
+         
+        const accessToken = res.body.data.accessToken
+        const id = res.body.data.user.userId
+        storeId = id
+        const res2 = await request(app)
+                    .get(`/api/users/${id}`)   
+                    .set('Authorization', `Bearer ${accessToken}`)
+                    .set('Accept', 'application/json')                    
+        
+        expect(res2.status).toBe(200)
+        expect(res2.body).toHaveProperty('data')
+        expect(res2.body.data.userId).toBe(id)
+    })
+
+    it('should not allow false access token to make request', async()=>{
+        const falseAccessToken = 'asflajsofwoqfsf'
+        const res = await request(app)
+            .get(`/api/users/${storeId}`)   
+            .set('Authorization', `Bearer ${falseAccessToken}`)
+            .set('Accept', 'application/json')                    
+        
+        expect(res.status).toBe(403)
+    })
+})

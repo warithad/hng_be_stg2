@@ -6,6 +6,7 @@ import { AuthenticatedRequest, authenticateToken } from '../utilities/middleware
 const router = express.Router()
 
 router.get('/:id', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
+  console.log('Hitting endpoint')
   try {
     if (!req.user){
       res.status(400).json({
@@ -16,7 +17,7 @@ router.get('/:id', authenticateToken, async (req: AuthenticatedRequest, res: Res
     }
     else{
 
-      if(req.user?.userId !== req.params.id && !checkConnectionBetweenUsers(req.user.userId, req.params.id)){
+      if(req.user.userId !== req.params.id && !checkConnectionBetweenUsers(req.user.userId, req.params.id)){
         res.status(400).json({
           status: "Bad Request",
           message: "Client error",

@@ -9,7 +9,11 @@ const router = express.Router()
 
 router.get('/:orgId',authenticateToken,  async (req: AuthenticatedRequest, res: Response) => {
     if(!req.user) {
-        res.status(401).json()
+        res.status(401).json({
+            "status": "Bad request",
+            "message": "Authentication failed",
+            "statusCode": 400
+        })
     }else{
         const userExistsInOrg = await prisma.organisationUser.findUnique({
             where:{ 
@@ -20,10 +24,10 @@ router.get('/:orgId',authenticateToken,  async (req: AuthenticatedRequest, res: 
             }
         })
         if(!userExistsInOrg){
-            res.status(401).json({
+            res.status(400).json({
                 "status": "Bad request",
                 "message": "Authentication failed",
-                "statusCode": 401
+                "statusCode": 400
             })
         }
         const organisation = await prisma.organisation.findUnique({
@@ -43,7 +47,7 @@ router.get('/:orgId',authenticateToken,  async (req: AuthenticatedRequest, res: 
     
 })
 
-router.post('/:orgId/users/', async (req: Request, res: Response) => {
+router.post('/:orgId/users/',authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
     try{
         const user = await prisma.user.findUnique({
             where: {
@@ -58,7 +62,9 @@ router.post('/:orgId/users/', async (req: Request, res: Response) => {
     
         if(!user || !organisation){
             res.status(400).json({
-                
+                status: "Bad Request",
+                message: "Client error",
+                statusCode: 400
             })
         }
         else{
@@ -75,7 +81,11 @@ router.post('/:orgId/users/', async (req: Request, res: Response) => {
             }
         }    
     }catch(e){
-        
+        res.status(400).json({
+            status: "Bad Request",
+            message: "Client error",
+            statusCode: 400
+        })   
     }
     
 })
