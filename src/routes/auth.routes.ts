@@ -95,7 +95,6 @@ router.post('/register', async (req: Request, res: Response) => {
                 }
             })
             const accessToken = generateAccessToken(user.userId)
-            console.log(`Access token: ${accessToken}`)
             await prisma.organisationUser.create({
                 data: {
                     userId: user.userId,

@@ -1,6 +1,7 @@
 import request from "supertest";
 import app from "../src/app";
 import prisma from '../src/prisma'
+
 describe('End to End tests', () =>{
     it('should register user successfully with default organisation', async ()=>{
         //should verify the default organisation is correctly generated
@@ -88,6 +89,3 @@ describe('End to End tests', () =>{
     })
 })
 
-
-describe('', ()=>{
-})
