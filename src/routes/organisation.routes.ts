@@ -113,6 +113,16 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Respo
                     userId: req.user.userId
                 }
             })
+
+            res.status(201).json({
+                status: "success",
+                message: "Organisation created successfully",
+                data: {
+                    orgId: organisation.orgId,
+                    name: organisation.name,
+                    description: organisation.description
+                }
+            })
         }
         
     }catch(e){
@@ -128,9 +138,16 @@ router.post('/', authenticateToken, async (req: AuthenticatedRequest, res: Respo
 })
 router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
     try{
-        const organisations = await prisma.organisationUser.findMany({
+        const organisations = await prisma.user.findMany({
             where: {
                 userId: req.user?.userId
+            },
+            include: {
+                organisations: {
+                    include: {
+                        org: true
+                    }
+                }
             }
         })
         res.json({
@@ -140,8 +157,13 @@ router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Respon
                 organisations
             }
         })
-    }catch(e){
 
+    }catch(e){
+        res.status(400).json({
+            status: "Bad Request",
+            message: "Client error",
+            statusCode: 400
+        })
     }
 })
 
