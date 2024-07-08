@@ -52,6 +52,7 @@ router.post('/login', async (req: Request, res: Response) => {
               }));
               res.status(422).json({ errors: errorDetails });
         } else {
+            console.log(e)
             res.status(500).json({ error: 'Internal Server Error' });
         }
     }

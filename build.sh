@@ -1,3 +1,2 @@
 npm run build
-npx prisma migrate
-npx prisma generate
+npx prisma migrate --name init
