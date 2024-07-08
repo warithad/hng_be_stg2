@@ -1,2 +1,2 @@
 npm run build
-npx prisma migrate --name init
+npx prisma migrate deploy
