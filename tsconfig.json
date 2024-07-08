@@ -1,0 +1,13 @@
+{
+    "compilerOptions":{
+        "sourceMap": true,
+        "outDir": "dist",
+        "target": "ES2021",
+        "moduleResolution": "node",
+        "strict": true,
+        "lib": ["esnext"],
+        "esModuleInterop": true,
+
+    },
+    "include": ["src/**/*.ts", "test/**/*.ts"]
+}
